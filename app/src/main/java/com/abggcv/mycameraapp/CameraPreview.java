@@ -68,7 +68,8 @@ public class CameraPreview
         Log.i("campreview", "Height = " + String.valueOf(height));
         previewWidth = width;
         previewHeight = height;
-
+        picWidth = 3264;
+        picHeight = 2448;
     }
 
     public List<Camera.Size> getResolutionList() {
@@ -302,6 +303,10 @@ public class CameraPreview
 
                         Log.i(TAG, "Computing brightness for pic-" + i);
                         Log.i(TAG, "Size of byte array: " + images[i].length);
+
+                        Log.i(TAG, "pic width: " + picWidth);
+                        Log.i(TAG, "pic height: " + picHeight);
+
                         //call compute brightness
                         ComputeBrightness(picWidth, picHeight, images[i], picName);
 

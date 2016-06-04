@@ -58,7 +58,7 @@ extern "C"
         if(lengthOfArray < 1)
             LOGI("empty bytearray");
         //convert to opencv mat
-        Mat mdata(width, height, CV_8UC4, (unsigned char *)_p_data);
+        Mat mdata(height, width, CV_8UC4, (unsigned char *)_p_data);
 
         LOGI("image size: %d", width*height);
         LOGI("image width: %d", width);

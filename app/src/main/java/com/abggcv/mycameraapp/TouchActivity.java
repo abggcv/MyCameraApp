@@ -183,9 +183,17 @@ public class TouchActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.touch, menu);
 
-        mResolutionMenu = menu.addSubMenu("Camera Resolution");
-        mResolutionMenuItems = new MenuItem[1];
-        mResolutionMenuItems[0] = mResolutionMenu.add(1, 0, Menu.NONE,"List");
+        mResolutionMenu = menu.addSubMenu("Camera Picture Resolution");
+        mResolutionList = cameraPreview.getResolutionList();
+        mResolutionMenuItems = new MenuItem[mResolutionList.size()];
+        ListIterator<Camera.Size> resolutionItr = mResolutionList.listIterator();
+        int idx = 0;
+        while (resolutionItr.hasNext()) {
+            Camera.Size element = resolutionItr.next();
+            mResolutionMenuItems[idx] = mResolutionMenu.add(1, idx, Menu.NONE,
+                    Integer.valueOf(element.width).toString() + "x" + Integer.valueOf(element.height).toString());
+            idx++;
+        }
 
         // Multiple pics
         mMultiplePics = menu.addSubMenu("Multiple Pics");
@@ -217,19 +225,15 @@ public class TouchActivity extends Activity {
 
         else if (item.getGroupId() == 1)
         {
-
-            mResolutionList = cameraPreview.getResolutionList();
-
-            mResolutionMenuItems = new MenuItem[mResolutionList.size()];
-
-            ListIterator<Camera.Size> resolutionItr = mResolutionList.listIterator();
-            int idx = 0;
-            while (resolutionItr.hasNext()) {
-                Camera.Size element = resolutionItr.next();
-                mResolutionMenuItems[idx] = mResolutionMenu.add(1, idx, Menu.NONE,
-                        Integer.valueOf(element.width).toString() + "x" + Integer.valueOf(element.height).toString());
-                idx++;
-            }
+            id = item.getItemId();
+            Camera.Size resolution = mResolutionList.get(id);
+            cameraPreview.setResolution(resolution);
+            //resWidth = cameraPreview.picWidth;
+            //resHeight = cameraPreview.picHeight;
+            resolution = cameraPreview.getResolution();
+            String caption = "Camera resolution set to: " + Integer.valueOf(resolution.width).toString() + "x" +
+                    Integer.valueOf(resolution.height).toString();
+            Toast.makeText(this, caption, Toast.LENGTH_SHORT).show();
         }
 
         //menu option for user input
@@ -368,7 +372,7 @@ public class TouchActivity extends Activity {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
             String currentDateandTime = sdf.format(new Date());
-            PictureFileName += "/" + currentDateandTime;
+            PictureFileName = extStorageDirectory + "/" + currentDateandTime;
 
             File file = new File(PictureFileName);
             if (!file.exists()) {
